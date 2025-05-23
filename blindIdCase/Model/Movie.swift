@@ -7,10 +7,17 @@
 
 import Foundation
 
-// API'den dönecek film verisini temsil eder
 struct Movie: Identifiable, Codable {
     let id: Int
     let title: String
     let description: String
-    let image: String
+    let posterURL: String
+    
+    // Eğer JSON’daki key’ler struct’taki isimlerle aynı değilse, CodingKeys tanımlanır
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case description
+        case posterURL = "poster_url"
+    }
 }

@@ -58,6 +58,9 @@ class NetworkManager {
                 }
             }
             
+            print("📦 Gelen JSON:")
+            print(String(data: data, encoding: .utf8) ?? "Veri yok")
+            
             do {
                 let decoded = try JSONDecoder().decode(T.self, from: data)
                 completion(.success(decoded))
