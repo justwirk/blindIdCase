@@ -57,7 +57,7 @@ class NetworkManager {
                     return completion(.failure(.invalidResponse))
                 }
             }
-            
+            //Hata nerden kaynaklaniyor.
             print("📦 Gelen JSON:")
             print(String(data: data, encoding: .utf8) ?? "Veri yok")
             

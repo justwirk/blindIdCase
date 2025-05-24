@@ -52,4 +52,8 @@ class APIService {
     func login(body: Data, completion: @escaping (Result<AuthResponse, NetworkError>) -> Void) {
         NetworkManager.shared.request(endpoint: "/auth/login", method: "POST", body: body, requiresAuth: false, completion: completion)
     }
+    
+    func getMovieByID(id: Int, completion: @escaping (Result<Movie, NetworkError>) -> Void) {
+        NetworkManager.shared.request(endpoint: "/movies/\(id)", completion: completion)
+    }
 }

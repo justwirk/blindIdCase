@@ -11,30 +11,31 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @StateObject private var viewModel = AuthViewModel()
+   // @StateObject private var viewModel = AuthViewModel()
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
         VStack(spacing: 20) {
             Text("Kayıt Ol").font(.largeTitle).bold()
             
             // Kullanıcı adı soyadı email şifre alanları
-            TextField("Ad", text: $viewModel.name)
+            TextField("Ad", text: $authViewModel.name)
                 .textFieldStyle(.roundedBorder)
-            TextField("Soyad", text: $viewModel.surname)
+            TextField("Soyad", text: $authViewModel.surname)
                 .textFieldStyle(.roundedBorder)
-            TextField("Email", text: $viewModel.email)
+            TextField("Email", text: $authViewModel.email)
                 .textFieldStyle(.roundedBorder)
-            SecureField("Şifre", text: $viewModel.password)
+            SecureField("Şifre", text: $authViewModel.password)
                 .textFieldStyle(.roundedBorder)
             
             // Hata varsa göster
-            if let error = viewModel.errorMessage {
+            if let error = authViewModel.errorMessage {
                 Text(error).foregroundColor(.red)
             }
             
             // Kayıt butonu
             Button("Kayıt Ol") {
-                viewModel.register()
+                authViewModel.register()
             }
             .padding()
             .frame(maxWidth: .infinity)

@@ -8,22 +8,20 @@
 // ViewModel/AuthViewModel.swift
 
 import Foundation
-import Combine
 
 class AuthViewModel: ObservableObject {
-    // Ekranların erişebileceği @Published değişkenler
+    // Ekranlarda kullanılan değerler
     @Published var email = ""
     @Published var password = ""
     @Published var name = ""
     @Published var surname = ""
+    
+    // Giriş durumu ve hata yönetimi
     @Published var isAuthenticated = false
     @Published var errorMessage: String?
     
     // Kayıt olma işlemi
     func register() {
-        guard let url = URL(string: "\(Constants.baseURL)/auth/register") else { return }
-        
-        // API'ye gönderilecek JSON veri yapısı
         let body: [String: Any] = [
             "name": name,
             "surname": surname,
@@ -34,26 +32,19 @@ class AuthViewModel: ObservableObject {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body)
             
-            // NetworkManager ile POST isteği
-            NetworkManager.shared.request(
-                endpoint: "/auth/register",
-                method: "POST",
-                body: jsonData,
-                requiresAuth: false
-            ) { (result: Result<AuthResponse, NetworkError>) in
+            APIService.shared.register(body: jsonData) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let response):
-                        TokenManager.shared.token = response.token
+                        TokenManager.shared.save(token: response.token)
                         self.isAuthenticated = true
                     case .failure(let error):
                         self.errorMessage = "Kayıt başarısız: \(error.localizedDescription)"
                     }
                 }
             }
-            
         } catch {
-            self.errorMessage = "JSON formatı hatalı"
+            self.errorMessage = "JSON oluşturulamadı"
         }
     }
     
@@ -67,16 +58,11 @@ class AuthViewModel: ObservableObject {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body)
             
-            NetworkManager.shared.request(
-                endpoint: "/auth/login",
-                method: "POST",
-                body: jsonData,
-                requiresAuth: false
-            ) { (result: Result<AuthResponse, NetworkError>) in
+            APIService.shared.login(body: jsonData) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let response):
-                        TokenManager.shared.token = response.token
+                        TokenManager.shared.save(token: response.token)
                         self.isAuthenticated = true
                     case .failure(let error):
                         self.errorMessage = "Giriş başarısız: \(error.localizedDescription)"
@@ -84,7 +70,14 @@ class AuthViewModel: ObservableObject {
                 }
             }
         } catch {
-            self.errorMessage = "JSON formatı hatalı"
+            self.errorMessage = "JSON oluşturulamadı"
         }
     }
+    
+    // Çıkış yapma
+    func logout() {
+        TokenManager.shared.clear()
+        self.isAuthenticated = false
+    }
 }
+

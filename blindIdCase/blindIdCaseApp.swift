@@ -5,8 +5,6 @@
 //  Created by Emre Yılmaz on 21.05.2025.
 //
 
-// MovieAppApp.swift
-
 import SwiftUI
 
 @main
@@ -16,14 +14,21 @@ struct blindIdCaseApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                if authViewModel.isAuthenticated || TokenManager.shared.token != nil {
+                if authViewModel.isAuthenticated {
                     MainTabView()
                 } else {
                     LoginView()
+                }
+            }
+            .onAppear {
+                // Eğer token zaten varsa, kullanıcıyı otomatik giriş yapmış say
+                if TokenManager.shared.token != nil {
+                    authViewModel.isAuthenticated = true
                 }
             }
             .environmentObject(authViewModel)
         }
     }
 }
+
 

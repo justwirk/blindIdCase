@@ -5,9 +5,6 @@
 //  Created by Emre Yılmaz on 22.05.2025.
 //
 
-
-// View/Movie/MovieListView.swift
-
 import SwiftUI
 
 struct MovieListView: View {

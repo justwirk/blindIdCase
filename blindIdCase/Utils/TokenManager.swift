@@ -9,24 +9,24 @@
 
 import Foundation
 
-class TokenManager {
+final class TokenManager {
     static let shared = TokenManager()
     
-    private let key = "authToken"
+    private let key = "user_token"
     
-    var token: String? {
-        get {
-            UserDefaults.standard.string(forKey: key)
-        }
-        set {
-            if let newValue = newValue {
-                UserDefaults.standard.set(newValue, forKey: key)
-            } else {
-                UserDefaults.standard.removeObject(forKey: key)
-            }
-        }
+    private init() {}
+
+    /// Kullanıcının token'ını UserDefaults'a kaydeder
+    func save(token: String) {
+        UserDefaults.standard.set(token, forKey: key)
     }
     
+    /// Kayıtlı token'ı getirir
+    var token: String? {
+        UserDefaults.standard.string(forKey: key)
+    }
+    
+    /// Token'ı siler (çıkış işlemi için)
     func clear() {
         UserDefaults.standard.removeObject(forKey: key)
     }

@@ -10,26 +10,23 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var viewModel = AuthViewModel()
-    
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     var body: some View {
         VStack(spacing: 20) {
             Text("Giriş Yap").font(.largeTitle).bold()
             
-            // Email ve şifre girişi
-            TextField("Email", text: $viewModel.email)
+            TextField("Email", text: $authViewModel.email)
                 .textFieldStyle(.roundedBorder)
-            SecureField("Şifre", text: $viewModel.password)
+            SecureField("Şifre", text: $authViewModel.password)
                 .textFieldStyle(.roundedBorder)
             
-            // Hata mesajı varsa göster
-            if let error = viewModel.errorMessage {
+            if let error = authViewModel.errorMessage {
                 Text(error).foregroundColor(.red)
             }
             
-            // Giriş butonu
             Button("Giriş Yap") {
-                viewModel.login()
+                authViewModel.login()
             }
             .padding()
             .frame(maxWidth: .infinity)
@@ -37,7 +34,6 @@ struct LoginView: View {
             .foregroundColor(.white)
             .cornerRadius(10)
             
-            // Kayıt ekranına yönlendirme
             NavigationLink("Hesabın yok mu? Kayıt ol", destination: RegisterView())
         }
         .padding()
@@ -45,5 +41,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginView().environmentObject(AuthViewModel())
 }
